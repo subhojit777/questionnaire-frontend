@@ -23,9 +23,12 @@ class Participant extends Component {
       );
     }
     else {
+      let loginURL = `https://github.com/login/oauth/authorize?scope=user:email,read:user&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`;
       return (
-        <div>not logged in</div>
-      )
+        <div>
+          <a href={loginURL}>Click here to login</a>
+        </div>
+      );
     }
   }
 }
