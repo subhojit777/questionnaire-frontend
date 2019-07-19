@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "dotenv": "^8.0.0",
+    "query-string": "^6.8.1",
     "react": "^16.8.6",
     "react-cookie": "^4.0.1",
     "react-dom": "^16.8.6",
