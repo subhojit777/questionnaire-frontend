@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {parse} from 'query-string';
-require('dotenv').config();
+import {withCookies} from 'react-cookie';
 
 class GhRedirect extends Component {
   constructor(props) {
@@ -17,18 +17,31 @@ class GhRedirect extends Component {
       code: this.state.code,
     };
     getTokenUrl.search = new URLSearchParams(params).toString();
+    const {cookies} = this.props;
 
     fetch(getTokenUrl.toString())
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+      .then(response => response.json())
+      .then(data => {
+        cookies.set('token', data);
+        this.setState({
+          token: data,
+        });
+      })
+      .catch(error => console.error(error));
   }
 
   render() {
-    return (
-      <div>finally this should be empty</div>
-    );
+    if (this.state.token) {
+      return <div>
+        logged in successfully. time to get back.
+      </div>;
+    }
+    else {
+      return <div>
+        finally this should be empty
+      </div>;
+    }
   }
 }
 
-export default GhRedirect;
+export default withCookies(GhRedirect);
