@@ -23,7 +23,9 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path='/participant' component={Participant} />
+          <Route path='/participant' render={(routeProps) => (
+            <Participant {...routeProps} accessToken={this.state.token} />
+          )} />
           <Route path='/gh-redirect' component={GhRedirect} />
         </Switch>
       </Router>
