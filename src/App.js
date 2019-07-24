@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Participant from "./components/Participant";
 import {Cookies, withCookies} from "react-cookie";
-import GhRedirect from "./components/GhRedirect";
 import {instanceOf} from "prop-types";
 
 class App extends Component {
@@ -24,9 +23,8 @@ class App extends Component {
       <Router>
         <Switch>
           <Route path='/participant' render={(routeProps) => (
-            <Participant {...routeProps} accessToken={this.state.token} />
+            <Participant {...routeProps} token={this.state.token} />
           )} />
-          <Route path='/gh-redirect' component={GhRedirect} />
         </Switch>
       </Router>
     );
