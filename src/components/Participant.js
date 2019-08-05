@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {parse} from "query-string";
 import {withCookies} from "react-cookie";
+import Question from "../components/Question";
 
 class Participant extends Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class Participant extends Component {
   render() {
     if (this.state.token) {
       return (
-        <div>logged in</div>
+        <Question />
       );
     }
     else {
