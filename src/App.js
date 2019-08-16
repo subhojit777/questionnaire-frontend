@@ -13,8 +13,10 @@ class App extends Component {
     super(props);
 
     const {cookies} = props;
+    // TODO: Unhardcode the default presentation ID.
     this.state = {
       token: cookies.get('token') || null,
+      presentationId: cookies.get('pid') || 2,
     };
   }
 
@@ -23,7 +25,7 @@ class App extends Component {
       <Router>
         <Switch>
           <Route path='/participant' render={(routeProps) => (
-            <Participant {...routeProps} token={this.state.token} />
+            <Participant {...routeProps} token={this.state.token} presentationId={this.state.presentationId} />
           )} />
         </Switch>
       </Router>
