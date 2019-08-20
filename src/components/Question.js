@@ -1,23 +1,22 @@
 import React, {Component} from "react";
 import {withCookies} from "react-cookie";
 import WaitMessage from "./WaitMessage";
-import PresentationNotFoundMessage from "./PresentationNotFoundMessage";
 
 class Question extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      presentationId: props.presentationId,
-      questions: [],
-      questionIndex: -1,
+      questionId: props.questionId,
+      options: [],
+      optionIndex: -1,
+      question: null,
     };
   }
 
-  getQuestionsByPresentation(presentationId) {
+  getQuestionData(questionId) {
     const {cookies} = this.props;
 
-    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/questions-presentation`);
-    url.search = new URLSearchParams({presentation_id: presentationId}).toString();
+    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/questions/${questionId}`);
 
     fetch(url.toString(), {
       headers: {
@@ -28,35 +27,54 @@ class Question extends Component {
     .then(response => response.json())
     .then(data => {
       this.setState({
-        questions: data,
-        questionIndex: 0,
+        question: data,
       });
     })
     .catch(error => console.error(error));
   }
 
+  getOptions(questionId) {
+    const {cookies} = this.props;
+
+    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question`);
+    url.search = new URLSearchParams({
+      question_id: questionId,
+    }).toString();
+
+    fetch(url.toString(), {
+      headers: {
+        'Authorization': `token ${cookies.get('token')}`,
+        'Accept': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({
+        options: data,
+        optionIndex: 0,
+      })
+    });
+  }
+
   componentWillMount() {
-    this.getQuestionsByPresentation(this.state.presentationId);
+    this.getQuestionData(this.state.questionId);
+    this.getOptions(this.state.questionId);
   }
 
   render() {
-    if (this.state.presentationId) {
-      let question = this.state.questions[this.state.questionIndex];
+    // TODO: Test and refactor.
+    let question = this.state.question;
+    let options = this.state.options;
+    console.log(options);
 
-      if (question) {
-        return (
-          <div>{question.title}</div>
-        );
-      }
-      else {
-        return (
-          <WaitMessage />
-        );
-      }
+    if (question && options) {
+      return (
+        <div>{question.title}</div>
+      );
     }
     else {
       return (
-        <PresentationNotFoundMessage />
+        <WaitMessage />
       );
     }
   }

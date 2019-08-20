@@ -11,6 +11,7 @@ class Participant extends Component {
     this.state = {
       token: props.token,
       presentationId: props.presentationId,
+      questionId: 1,
     };
   }
 
@@ -41,7 +42,7 @@ class Participant extends Component {
     if (this.state.token) {
       if (this.state.presentationId) {
         return (
-          <Question presentationId={this.state.presentationId} />
+          <Question questionId={this.state.questionId} />
         );
       }
       else {
