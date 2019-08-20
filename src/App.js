@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Participant from "./components/Participant";
 import {Cookies, withCookies} from "react-cookie";
 import {instanceOf} from "prop-types";
+import WaitMessage from "./components/WaitMessage";
 
 class App extends Component {
   static propTypes = {
@@ -17,19 +18,54 @@ class App extends Component {
     this.state = {
       token: cookies.get('token') || null,
       presentationId: cookies.get('pid') || 2,
+      questions: null,
+      questionIndex: -1,
     };
   }
 
+  getQuestionsByPresentation(presentationId) {
+    const {cookies} = this.props;
+
+    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/questions-presentation`);
+    url.search = new URLSearchParams({presentation_id: presentationId}).toString();
+
+    fetch(url.toString(), {
+      headers: {
+        'Authorization': `token ${cookies.get('token')}`,
+        'Accept': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({
+        questions: data,
+        questionIndex: 0,
+      });
+    })
+    .catch(error => console.error(error));
+  }
+
+  componentDidMount() {
+    this.getQuestionsByPresentation(this.state.presentationId);
+  }
+
   render() {
-    return (
-      <Router>
-        <Switch>
-          <Route path='/participant' render={(routeProps) => (
-            <Participant {...routeProps} token={this.state.token} presentationId={this.state.presentationId} />
-          )} />
-        </Switch>
-      </Router>
-    );
+    if (this.state.questions) {
+      return (
+        <Router>
+          <Switch>
+            <Route path='/participant' render={(routeProps) => (
+              <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
+            )} />
+          </Switch>
+        </Router>
+      );
+    }
+    else {
+      return (
+        <WaitMessage />
+      );
+    }
   }
 }
 

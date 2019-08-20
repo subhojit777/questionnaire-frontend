@@ -5,32 +5,12 @@ import WaitMessage from "./WaitMessage";
 class Question extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      questionId: props.questionId,
-      options: [],
+      question: props.question,
+      options: null,
       optionIndex: -1,
-      question: null,
     };
-  }
-
-  getQuestionData(questionId) {
-    const {cookies} = this.props;
-
-    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/questions/${questionId}`);
-
-    fetch(url.toString(), {
-      headers: {
-        'Authorization': `token ${cookies.get('token')}`,
-        'Accept': 'application/json',
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      this.setState({
-        question: data,
-      });
-    })
-    .catch(error => console.error(error));
   }
 
   getOptions(questionId) {
@@ -57,19 +37,15 @@ class Question extends Component {
   }
 
   componentWillMount() {
-    this.getQuestionData(this.state.questionId);
-    this.getOptions(this.state.questionId);
+    this.getOptions(this.state.question.id);
   }
 
   render() {
-    // TODO: Test and refactor.
-    let question = this.state.question;
     let options = this.state.options;
-    console.log(options);
 
-    if (question && options) {
+    if (options) {
       return (
-        <div>{question.title}</div>
+        <div>{this.state.question.title}</div>
       );
     }
     else {

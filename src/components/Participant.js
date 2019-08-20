@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {parse} from "query-string";
 import {withCookies} from "react-cookie";
 import Question from "../components/Question";
-import PresentationNotFoundMessage from "./PresentationNotFoundMessage";
 
 class Participant extends Component {
   constructor(props) {
@@ -10,8 +9,8 @@ class Participant extends Component {
 
     this.state = {
       token: props.token,
-      presentationId: props.presentationId,
-      questionId: 1,
+      questions: props.questions,
+      questionIndex: props.questionIndex,
     };
   }
 
@@ -40,16 +39,10 @@ class Participant extends Component {
 
   render() {
     if (this.state.token) {
-      if (this.state.presentationId) {
-        return (
-          <Question questionId={this.state.questionId} />
-        );
-      }
-      else {
-        return (
-          <PresentationNotFoundMessage />
-        );
-      }
+      let question = this.state.questions[this.state.questionIndex];
+      return (
+        <Question question={question} />
+      );
     }
     else {
       let loginURL = `https://github.com/login/oauth/authorize?scope=user:email,read:user&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`;
