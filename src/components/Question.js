@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {withCookies} from "react-cookie";
 import WaitMessage from "./WaitMessage";
+import {Radio, RadioGroup} from "react-radio-group";
 
 class Question extends Component {
   constructor(props) {
@@ -9,13 +10,10 @@ class Question extends Component {
     this.state = {
       question: props.question,
       options: null,
-      optionIndex: -1,
     };
   }
 
   getOptions(questionId) {
-    const {cookies} = this.props;
-
     let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question`);
     url.search = new URLSearchParams({
       question_id: questionId,
@@ -23,7 +21,6 @@ class Question extends Component {
 
     fetch(url.toString(), {
       headers: {
-        'Authorization': `token ${cookies.get('token')}`,
         'Accept': 'application/json',
       }
     })
@@ -31,7 +28,6 @@ class Question extends Component {
     .then(data => {
       this.setState({
         options: data,
-        optionIndex: 0,
       })
     });
   }
@@ -45,7 +41,19 @@ class Question extends Component {
 
     if (options) {
       return (
-        <div>{this.state.question.title}</div>
+        <div>
+          <h3>{this.state.question.title}</h3>
+          <RadioGroup name="options">
+            {options.map(function (option) {
+              return (
+                <div className="form-check" key={option.id}>
+                  <Radio value={option.id} className="form-check-input" id={option.id} />
+                  <label className="form-check-label" htmlFor={option.id}>{option.data}</label>
+                </div>
+              );
+            })}
+          </RadioGroup>
+        </div>
       );
     }
     else {

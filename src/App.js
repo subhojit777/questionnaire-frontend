@@ -24,14 +24,11 @@ class App extends Component {
   }
 
   getQuestionsByPresentation(presentationId) {
-    const {cookies} = this.props;
-
     let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/questions-presentation`);
     url.search = new URLSearchParams({presentation_id: presentationId}).toString();
 
     fetch(url.toString(), {
       headers: {
-        'Authorization': `token ${cookies.get('token')}`,
         'Accept': 'application/json',
       }
     })
