@@ -47,22 +47,21 @@ class Question extends Component {
     let options = this.state.options;
 
     if (options) {
-      let optionElements = [];
-      if (this.state.submittedValue) {
+      let shouldDisableOptions = (this.state.submittedValue !== null);
+      let optionElements = options.map(function (option) {
+        return (
+          <div className="form-check" key={option.id}>
+            <Radio value={option.id} className="form-check-input" id={option.id} />
+            <label className="form-check-label" htmlFor={option.id}>{option.data}</label>
+          </div>
+        );
+      });
+
+      if (shouldDisableOptions)  {
         optionElements = options.map(function (option) {
           return (
             <div className="form-check" key={option.id}>
               <Radio value={option.id} className="form-check-input" id={option.id} disabled />
-              <label className="form-check-label" htmlFor={option.id}>{option.data}</label>
-            </div>
-          );
-        });
-      }
-      else {
-        optionElements = options.map(function (option) {
-          return (
-            <div className="form-check" key={option.id}>
-              <Radio value={option.id} className="form-check-input" id={option.id} />
               <label className="form-check-label" htmlFor={option.id}>{option.data}</label>
             </div>
           );
