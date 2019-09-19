@@ -41,7 +41,7 @@ class Participant extends Component {
     if (this.state.token) {
       let question = this.state.questions[this.state.questionIndex];
       return (
-        <Question question={question} />
+        <Question question={question} token={this.state.token} />
       );
     }
     else {

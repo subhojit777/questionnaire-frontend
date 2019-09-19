@@ -9,6 +9,7 @@ class Question extends Component {
 
     this.state = {
       question: props.question,
+      token: props.token,
       options: null,
       submittedValue: null,
     };
@@ -34,9 +35,25 @@ class Question extends Component {
   }
 
   handleSubmission(value) {
-    this.setState({
-      submittedValue: value,
-    });
+    let getTokenUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers`);
+    let body = {
+      'option_id': value,
+    };
+
+    fetch(getTokenUrl.toString(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `token ${this.state.token}`,
+      },
+      body: JSON.stringify(body),
+    })
+    .then(() => {
+      this.setState({
+        submittedValue: value,
+      });
+    })
+    .catch(error => console.error(error));
   }
 
   componentWillMount() {
