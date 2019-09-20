@@ -50,10 +50,18 @@ class Question extends Component {
       },
       body: JSON.stringify(body),
     })
-    .then(() => {
-      this.setState({
-        submittedValue: value,
-      });
+    .then((response) => {
+      if (response.status === 200) {
+        this.setState({
+          submittedValue: value,
+        });
+      }
+      else {
+        this.setState({
+          hasErrors: true,
+        });
+        console.error(response);
+      }
     })
     .catch(error => {
       this.setState({
