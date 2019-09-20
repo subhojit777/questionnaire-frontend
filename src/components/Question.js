@@ -13,6 +13,7 @@ class Question extends Component {
       token: props.token,
       options: null,
       submittedValue: null,
+      hasErrors: false,
     };
   }
 
@@ -54,7 +55,12 @@ class Question extends Component {
         submittedValue: value,
       });
     })
-    .catch(error => console.error(error));
+    .catch(error => {
+      this.setState({
+        hasErrors: true,
+      });
+      console.error(error);
+    });
   }
 
   componentWillMount() {
@@ -86,6 +92,10 @@ class Question extends Component {
             </div>
           );
         });
+      }
+
+      if (this.state.hasErrors) {
+        feedbackMessage = <Alert type="danger" message="Something wrong happened, your opinion is not posted. Please contact the presenter." />;
       }
 
       return (
