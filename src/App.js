@@ -4,6 +4,8 @@ import Participant from "./components/Participant";
 import {Cookies, withCookies} from "react-cookie";
 import {instanceOf} from "prop-types";
 import WaitMessage from "./components/WaitMessage";
+import Presenter from "./components/Presenter";
+import QuestionIndex from "./contexts/QuestionIndex";
 
 class App extends Component {
   static propTypes = {
@@ -49,13 +51,20 @@ class App extends Component {
   render() {
     if (this.state.questions) {
       return (
-        <Router>
-          <Switch>
-            <Route path='/participant' render={(routeProps) => (
-              <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
-            )} />
-          </Switch>
-        </Router>
+        <QuestionIndex.Provider value={this.state.questionIndex}>
+          <Router>
+            <Switch>
+              <Route path='/' render={(routeProps) => (
+                // TODO: Find out how to alter the question index.
+                // TODO: https://reactjs.org/docs/context.html#updating-context-from-a-nested-component
+                <Presenter {...routeProps} question={this.state.question} />
+              )} />
+              <Route path='/participant' render={(routeProps) => (
+                <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
+              )} />
+            </Switch>
+          </Router>
+        </QuestionIndex.Provider>
       );
     }
     else {
