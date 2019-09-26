@@ -1,5 +1,8 @@
 import * as React from "react";
 
-const QuestionIndex = React.createContext(0);
-
-export default QuestionIndex;
+export const defaultPosition = 0;
+export const QuestionIndex = React.createContext({
+  currentPosition: defaultPosition,
+  moveForward: () => {},
+  moveBackward: () => {},
+});

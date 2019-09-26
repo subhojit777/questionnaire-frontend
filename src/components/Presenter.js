@@ -1,20 +1,23 @@
 import React, {Component} from "react";
-import QuestionIndex from "../contexts/QuestionIndex";
+import {QuestionIndex} from "../contexts/QuestionIndex";
 
 class Presenter extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      question: props.question,
+      questions: props.questions,
     };
   }
 
   render() {
+    // TODO: Implement forward and back navigation keys and connect them with context.
     return (
-      <div>
-        List of questions and answers as chart
-      </div>
+      <QuestionIndex.Consumer>
+        <div>
+          List of questions and answers as chart
+        </div>
+      </QuestionIndex.Consumer>
     );
   }
 }
