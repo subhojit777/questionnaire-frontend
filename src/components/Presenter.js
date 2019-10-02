@@ -11,12 +11,15 @@ class Presenter extends Component {
   }
 
   render() {
-    // TODO: Implement forward and back navigation keys and connect them with context.
     return (
       <QuestionIndex.Consumer>
-        <div>
-          List of questions and answers as chart
-        </div>
+        {({currentPosition, moveForward, moveBackward}) => (
+          <div>
+            <div>List of questions and answers as chart</div>
+            <button type="button" onClick={moveBackward}>Backward</button>
+            <button type="button" onClick={moveForward}>Forward</button>
+          </div>
+        )}
       </QuestionIndex.Consumer>
     );
   }

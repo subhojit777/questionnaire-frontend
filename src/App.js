@@ -35,6 +35,8 @@ class App extends Component {
       presentationId: cookies.get('pid') || 2,
       questions: null,
       questionIndex: defaultPosition,
+      proceed: this.moveForward,
+      back: this.moveBackward,
     };
   }
 
@@ -64,20 +66,20 @@ class App extends Component {
   render() {
     if (this.state.questions) {
       return (
-        <QuestionIndex.Provider value={this.state.questionIndex}>
-          <Router>
+        <Router>
+          <QuestionIndex.Provider value={this.state}>
             <Switch>
               <Route path='/' render={(routeProps) => (
                 // TODO: Find out how to alter the question index.
                 // TODO: https://reactjs.org/docs/context.html#updating-context-from-a-nested-component
-                <Presenter {...routeProps} questions={this.state.questions} />
+                <Presenter {...routeProps} />
               )} />
               <Route path='/participant' render={(routeProps) => (
                 <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
               )} />
             </Switch>
-          </Router>
-        </QuestionIndex.Provider>
+          </QuestionIndex.Provider>
+        </Router>
       );
     }
     else {
