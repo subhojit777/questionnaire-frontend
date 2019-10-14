@@ -5,7 +5,10 @@ import {Cookies, withCookies} from "react-cookie";
 import {instanceOf} from "prop-types";
 import WaitMessage from "./components/WaitMessage";
 import Presenter from "./components/Presenter";
-import {QuestionIndex, defaultPosition} from "./contexts/QuestionIndex";
+import {
+  defaultPosition,
+  QuestionIndexProvider
+} from "./contexts/QuestionIndex";
 
 class App extends Component {
   static propTypes = {
@@ -16,18 +19,6 @@ class App extends Component {
     super(props);
 
     const {cookies} = props;
-
-    this.moveForward = () => {
-      this.setState(state => ({
-        questionIndex: state.currentPosition + 1,
-      }));
-    };
-
-    this.moveBackward = () => {
-      this.setState(state => ({
-        questionIndex: state.currentPosition - 1,
-      }));
-    };
 
     // TODO: Unhardcode the default presentation ID.
     this.state = {
@@ -67,18 +58,14 @@ class App extends Component {
     if (this.state.questions) {
       return (
         <Router>
-          <QuestionIndex.Provider value={this.state}>
+          <QuestionIndexProvider>
+            <Presenter />
             <Switch>
-              <Route path='/' render={(routeProps) => (
-                // TODO: Find out how to alter the question index.
-                // TODO: https://reactjs.org/docs/context.html#updating-context-from-a-nested-component
-                <Presenter {...routeProps} />
-              )} />
               <Route path='/participant' render={(routeProps) => (
                 <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
               )} />
             </Switch>
-          </QuestionIndex.Provider>
+          </QuestionIndexProvider>
         </Router>
       );
     }

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {QuestionIndex} from "../contexts/QuestionIndex";
+import {QuestionIndexConsumer} from "../contexts/QuestionIndex";
 
 class Presenter extends Component {
   constructor(props) {
@@ -12,19 +12,19 @@ class Presenter extends Component {
 
   render() {
     return (
-      <QuestionIndex.Consumer>
-        {({currentPosition, moveForward, moveBackward}) => (
-          <div>
-            <div>List of questions and answers as chart</div>
-            <button type="button" onClick={moveBackward}>Backward</button>
-            <button type="button" onClick={moveForward}>Forward</button>
-          </div>
-        )}
-      </QuestionIndex.Consumer>
+      <QuestionIndexConsumer>
+        {({currentPosition, moveForward, moveBackward}) => {
+          return (
+            <div>
+              <div>List of questions and answers as chart {currentPosition}</div>
+              <button type="button" onClick={moveBackward}>Backward</button>
+              <button type="button" onClick={moveForward}>Forward</button>
+            </div>
+          )
+        }}
+      </QuestionIndexConsumer>
     );
   }
 }
-
-Presenter.contextType = QuestionIndex;
 
 export default Presenter;
