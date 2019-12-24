@@ -11,14 +11,20 @@ class Presenter extends Component {
   }
 
   render() {
+    let questions = this.state.questions;
+    let questionsCount = (questions.length - 1);
+
     return (
       <QuestionIndexConsumer>
         {({currentPosition, moveForward, moveBackward}) => {
+          let shouldMoveForward = currentPosition < questionsCount;
+          let shouldMoveBackward = currentPosition >= questionsCount;
+
           return (
             <div>
-              <div>List of questions and answers as chart {currentPosition}</div>
-              <button type="button" onClick={moveBackward}>Backward</button>
-              <button type="button" onClick={moveForward}>Forward</button>
+              <div>{questions[currentPosition].title}</div>
+              <button type="button" disabled={!shouldMoveBackward} onClick={moveBackward}>Backward</button>
+              <button type="button" disabled={!shouldMoveForward} onClick={moveForward}>Forward</button>
             </div>
           )
         }}
