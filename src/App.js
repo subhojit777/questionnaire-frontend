@@ -59,7 +59,7 @@ class App extends Component {
       return (
         <Router>
           <QuestionIndexProvider>
-            <Presenter />
+            <Presenter questions={this.state.questions} />
             <Switch>
               <Route path='/participant' render={(routeProps) => (
                 <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
