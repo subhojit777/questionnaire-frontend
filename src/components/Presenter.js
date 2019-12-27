@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {QuestionIndexConsumer} from "../contexts/QuestionIndex";
+import Answers from "./Answers";
 
 class Presenter extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class Presenter extends Component {
           return (
             <div>
               <div>{questions[currentPosition].title}</div>
+              <Answers question={questions[currentPosition]} />
               <button type="button" disabled={!shouldMoveBackward} onClick={moveBackward}>Backward</button>
               <button type="button" disabled={!shouldMoveForward} onClick={moveForward}>Forward</button>
             </div>
