@@ -5,10 +5,6 @@ import {Cookies, withCookies} from "react-cookie";
 import {instanceOf} from "prop-types";
 import WaitMessage from "./components/WaitMessage";
 import Presenter from "./components/Presenter";
-import {
-  defaultPosition,
-  QuestionIndexProvider
-} from "./contexts/QuestionIndex";
 
 class App extends Component {
   static propTypes = {
@@ -25,7 +21,7 @@ class App extends Component {
       token: cookies.get('token') || null,
       presentationId: cookies.get('pid') || 2,
       questions: null,
-      questionIndex: defaultPosition,
+      questionIndex: 0,
       proceed: this.moveForward,
       back: this.moveBackward,
     };
@@ -58,14 +54,12 @@ class App extends Component {
     if (this.state.questions) {
       return (
         <Router>
-          <QuestionIndexProvider>
-            <Presenter questions={this.state.questions} />
-            <Switch>
-              <Route path='/participant' render={(routeProps) => (
-                <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
-              )} />
-            </Switch>
-          </QuestionIndexProvider>
+          <Presenter questions={this.state.questions} />
+          <Switch>
+            <Route path='/participant' render={(routeProps) => (
+              <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
+            )} />
+          </Switch>
         </Router>
       );
     }
