@@ -16,10 +16,9 @@ class Presenter extends Component {
     this.moveForward = this.moveForward.bind(this);
   }
 
-  loadOptions() {
+  loadOptions(index) {
     let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question`);
-    url.search = new URLSearchParams({question_id: this.state.questions[this.state
-  .currentPosition].id}).toString();
+    url.search = new URLSearchParams({question_id: this.state.questions[index].id}).toString();
 
     fetch(url.toString(), {
       headers: {
@@ -36,25 +35,23 @@ class Presenter extends Component {
   }
 
   moveBackward() {
-    let currentPosition = this.state.currentPosition;
+    let newPosition = this.state.currentPosition - 1;
+    this.loadOptions(newPosition);
     this.setState({
-      currentPosition: currentPosition - 1,
+      currentPosition: newPosition,
     });
-
-    this.loadOptions();
   }
 
   moveForward() {
-    let currentPosition = this.state.currentPosition;
+    let newPosition = this.state.currentPosition + 1;
+    this.loadOptions(newPosition);
     this.setState({
-      currentPosition: currentPosition + 1,
+      currentPosition: newPosition,
     });
-
-    this.loadOptions();
   }
 
   componentDidMount() {
-    this.loadOptions();
+    this.loadOptions(this.state.currentPosition);
   }
 
   render() {
