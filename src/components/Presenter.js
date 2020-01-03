@@ -63,8 +63,8 @@ class Presenter extends Component {
       <div>
         <h2>{question.title}</h2>
         {options}
-        <button type="button" disabled={!shouldMoveBackward} onClick={this.moveBackward}>Backward</button>
-        <button type="button" disabled={!shouldMoveForward} onClick={this.moveForward}>Forward</button>
+        <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveBackward} onClick={this.moveBackward}>Backward</button>
+        <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveForward} onClick={this.moveForward}>Forward</button>
       </div>
     )
   }
