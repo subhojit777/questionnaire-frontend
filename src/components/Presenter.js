@@ -1,37 +1,80 @@
 import React, {Component} from "react";
-import {QuestionIndexConsumer} from "../contexts/QuestionIndex";
-import Answers from "./Answers";
 
 class Presenter extends Component {
   constructor(props) {
     super(props);
 
+    this.questionsCount = (props.questions.length - 1);
     this.state = {
+      currentPosition: 0,
       questions: props.questions,
+      options: [],
     };
+
+    this.loadOptions = this.loadOptions.bind(this);
+    this.moveBackward = this.moveBackward.bind(this);
+    this.moveForward = this.moveForward.bind(this);
+  }
+
+  loadOptions() {
+    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question`);
+    url.search = new URLSearchParams({question_id: this.state.questions[this.state
+  .currentPosition].id}).toString();
+
+    fetch(url.toString(), {
+      headers: {
+        'Accept': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({
+        options: data,
+      });
+    })
+    .catch(error => console.error(error));
+  }
+
+  moveBackward() {
+    let currentPosition = this.state.currentPosition;
+    this.setState({
+      currentPosition: currentPosition - 1,
+    });
+
+    this.loadOptions();
+  }
+
+  moveForward() {
+    let currentPosition = this.state.currentPosition;
+    this.setState({
+      currentPosition: currentPosition + 1,
+    });
+
+    this.loadOptions();
+  }
+
+  componentDidMount() {
+    this.loadOptions();
   }
 
   render() {
-    let questions = this.state.questions;
-    let questionsCount = (questions.length - 1);
+    const shouldMoveForward = this.state.currentPosition < this.questionsCount;
+    const shouldMoveBackward = this.state.currentPosition >= this.questionsCount;
+    const question = this.state.questions[this.state.currentPosition];
+    const options = this.state.options.map((option) => {
+      return (
+        <li key={option.id}>{option.data}</li>
+      );
+    });
 
     return (
-      <QuestionIndexConsumer>
-        {({currentPosition, moveForward, moveBackward}) => {
-          let shouldMoveForward = currentPosition < questionsCount;
-          let shouldMoveBackward = currentPosition >= questionsCount;
-
-          return (
-            <div>
-              <div>{questions[currentPosition].title}</div>
-              <Answers question={questions[currentPosition]} />
-              <button type="button" disabled={!shouldMoveBackward} onClick={moveBackward}>Backward</button>
-              <button type="button" disabled={!shouldMoveForward} onClick={moveForward}>Forward</button>
-            </div>
-          )
-        }}
-      </QuestionIndexConsumer>
-    );
+      <div>
+        <h2>{question.title}</h2>
+        {options}
+        <button type="button" disabled={!shouldMoveBackward} onClick={this.moveBackward}>Backward</button>
+        <button type="button" disabled={!shouldMoveForward} onClick={this.moveForward}>Forward</button>
+      </div>
+    )
   }
 }
 
