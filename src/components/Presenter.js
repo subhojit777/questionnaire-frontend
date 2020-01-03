@@ -29,6 +29,7 @@ class Presenter extends Component {
     .then(data => {
       this.setState({
         options: data,
+        currentPosition: index,
       });
     })
     .catch(error => console.error(error));
@@ -37,17 +38,11 @@ class Presenter extends Component {
   moveBackward() {
     let newPosition = this.state.currentPosition - 1;
     this.loadOptions(newPosition);
-    this.setState({
-      currentPosition: newPosition,
-    });
   }
 
   moveForward() {
     let newPosition = this.state.currentPosition + 1;
     this.loadOptions(newPosition);
-    this.setState({
-      currentPosition: newPosition,
-    });
   }
 
   componentDidMount() {
