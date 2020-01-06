@@ -4,10 +4,10 @@ class Presenter extends Component {
   constructor(props) {
     super(props);
 
-    this.questionsCount = (props.questions.length - 1);
+    this.questions = props.questions;
+    this.questionsCount = (this.questions.length - 1);
     this.state = {
       currentPosition: 0,
-      questions: props.questions,
       options: [],
     };
 
@@ -18,7 +18,7 @@ class Presenter extends Component {
 
   loadOptions(index) {
     let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question`);
-    url.search = new URLSearchParams({question_id: this.state.questions[index].id}).toString();
+    url.search = new URLSearchParams({question_id: this.questions[index].id}).toString();
 
     fetch(url.toString(), {
       headers: {
@@ -52,7 +52,7 @@ class Presenter extends Component {
   render() {
     const shouldMoveForward = this.state.currentPosition < this.questionsCount;
     const shouldMoveBackward = this.state.currentPosition >= this.questionsCount;
-    const question = this.state.questions[this.state.currentPosition];
+    const question = this.questions[this.state.currentPosition];
     const options = this.state.options.map((option) => {
       return (
         <li key={option.id}>{option.data}</li>
