@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "dotenv": "^8.0.0",
+    "highcharts": "^8.0.0",
+    "highcharts-react-official": "^2.2.2",
     "query-string": "^6.8.1",
     "react": "^16.8.6",
     "react-cookie": "^4.0.1",

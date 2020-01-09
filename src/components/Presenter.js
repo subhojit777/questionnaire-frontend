@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+import HighchartsReact from "highcharts-react-official";
+import Highcharts from 'highcharts';
 
 class Presenter extends Component {
   constructor(props) {
@@ -86,11 +88,24 @@ class Presenter extends Component {
         <li key={option.id}>{option.data}</li>
       );
     });
+    // TODO: Replace this with actual data.
+    const changeMe = {
+      title: {
+        text: 'My chart'
+      },
+      series: [{
+        data: [1, 2, 3]
+      }]
+    };
 
     return (
       <div>
         <h2>{question.title}</h2>
         {options}
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={changeMe}
+        />
         <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveBackward} onClick={this.moveBackward}>Backward</button>
         <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveForward} onClick={this.moveForward}>Forward</button>
       </div>
