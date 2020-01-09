@@ -21,10 +21,6 @@ class Presenter extends Component {
     const fetchOptionsByQuestionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question`);
     fetchOptionsByQuestionUrl.search = new URLSearchParams({question_id: this.questions[index].id}).toString();
 
-    const fetchAnswersByOptionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers-option`);
-
-    let answers = new Map();
-
     fetch(fetchOptionsByQuestionUrl.toString(), {
       headers: {
         'Accept': 'application/json',
@@ -33,28 +29,38 @@ class Presenter extends Component {
     .then(response => response.json())
     .then(data => {
       // Fetch answers for every option and build state.
-      data.forEach((option) => {
-        fetchAnswersByOptionUrl.search = new URLSearchParams({
-          option_id: option.id,
-        }).toString();
-
-        fetch(fetchAnswersByOptionUrl.toString(), {
-          headers: {
-            'Accept': 'application/json',
-          }
-        })
-        .then(response => response.json())
-        .then(data => answers.set(data.id, data));
-      });
-
-      // TODO: This isn't populating the answers state correctly.
-      this.setState({
-        options: data,
-        currentPosition: index,
-        answers: answers,
+      this.loadAnswers(data)
+      .then((answers) => {
+        this.setState({
+          options: data,
+          currentPosition: index,
+          answers: answers,
+        });
       });
     })
     .catch(error => console.error(error));
+  }
+
+  async loadAnswers(options) {
+    const fetchAnswersByOptionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers-option`);
+    const answers = new Map();
+
+    for (let i = 0; i < options.length; i++) {
+      fetchAnswersByOptionUrl.search = new URLSearchParams({
+        option_id: options[i].id,
+      }).toString();
+
+      const fetchResponse = await fetch(fetchAnswersByOptionUrl.toString(), {
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+      const data = await fetchResponse.json();
+
+      answers.set(options[i].id, data);
+    }
+
+    return answers;
   }
 
   moveBackward() {
