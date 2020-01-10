@@ -4,6 +4,7 @@ import Participant from "./components/Participant";
 import {Cookies, withCookies} from "react-cookie";
 import {instanceOf} from "prop-types";
 import WaitMessage from "./components/WaitMessage";
+import Presenter from "./components/Presenter";
 
 class App extends Component {
   static propTypes = {
@@ -14,12 +15,13 @@ class App extends Component {
     super(props);
 
     const {cookies} = props;
+
     // TODO: Unhardcode the default presentation ID.
     this.state = {
       token: cookies.get('token') || null,
       presentationId: cookies.get('pid') || 2,
       questions: null,
-      questionIndex: -1,
+      questionIndex: 0,
     };
   }
 
@@ -50,6 +52,7 @@ class App extends Component {
     if (this.state.questions) {
       return (
         <Router>
+          <Presenter questions={this.state.questions} />
           <Switch>
             <Route path='/participant' render={(routeProps) => (
               <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />

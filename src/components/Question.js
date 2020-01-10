@@ -37,12 +37,12 @@ class Question extends Component {
   }
 
   handleSubmission(value) {
-    let getTokenUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers`);
+    let answerPostUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers`);
     let body = {
       'option_id': value,
     };
 
-    fetch(getTokenUrl.toString(), {
+    fetch(answerPostUrl.toString(), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
