@@ -22,8 +22,6 @@ class App extends Component {
       presentationId: cookies.get('pid') || 2,
       questions: null,
       questionIndex: 0,
-      proceed: this.moveForward,
-      back: this.moveBackward,
     };
   }
 
