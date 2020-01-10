@@ -83,28 +83,35 @@ class Presenter extends Component {
     const shouldMoveForward = this.state.currentPosition < this.questionsCount;
     const shouldMoveBackward = this.state.currentPosition >= this.questionsCount;
     const question = this.questions[this.state.currentPosition];
-    const options = this.state.options.map((option) => {
-      return (
-        <li key={option.id}>{option.data}</li>
-      );
+    const options = this.state.options.map(option => option.data);
+    const answersCountForOptions = [];
+
+    this.state.answers.forEach((answers) => {
+      answersCountForOptions.push(answers.length);
     });
-    // TODO: Replace this with actual data.
-    const changeMe = {
+
+    const graphConfig = {
+      chart: {
+        type: 'column',
+      },
       title: {
-        text: 'My chart'
+        text: 'Result'
+      },
+      xAxis: {
+        categories: options,
       },
       series: [{
-        data: [1, 2, 3]
+        name: 'Frequency',
+        data: answersCountForOptions,
       }]
     };
 
     return (
       <div>
         <h2>{question.title}</h2>
-        {options}
         <HighchartsReact
           highcharts={Highcharts}
-          options={changeMe}
+          options={graphConfig}
         />
         <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveBackward} onClick={this.moveBackward}>Backward</button>
         <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveForward} onClick={this.moveForward}>Forward</button>
