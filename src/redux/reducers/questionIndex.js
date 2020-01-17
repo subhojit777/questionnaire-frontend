@@ -1,4 +1,4 @@
-import {NAV_FORWARD, NAV_BACKWARD} from '../actionTypes';
+import {NAVIGATE} from '../actionTypes';
 
 const initialState = {
   index: 0,
@@ -6,18 +6,11 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case NAV_FORWARD: {
+    case NAVIGATE: {
       return {
         ...state,
-        index: state.index + 1,
+        index: action.payload.index,
       };
-    }
-
-    case NAV_BACKWARD: {
-      return  {
-        ...state,
-        index: state.index - 1,
-      }
     }
 
     default:

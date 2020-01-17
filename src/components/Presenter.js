@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from 'highcharts';
+import {navigateForward, navigateBackward} from '../redux/actions';
+import {connect} from 'react-redux';
 
 class Presenter extends Component {
   constructor(props) {
@@ -66,13 +68,13 @@ class Presenter extends Component {
   }
 
   moveBackward() {
-    let newPosition = this.state.currentPosition - 1;
-    this.loadOptions(newPosition);
+    let action = this.props.navigateBackward();
+    this.loadOptions(action.payload.index);
   }
 
   moveForward() {
-    let newPosition = this.state.currentPosition + 1;
-    this.loadOptions(newPosition);
+    let action = this.props.navigateForward();
+    this.loadOptions(action.payload.index);
   }
 
   componentDidMount() {
@@ -120,4 +122,4 @@ class Presenter extends Component {
   }
 }
 
-export default Presenter;
+export default connect(null, {navigateForward, navigateBackward})(Presenter);
