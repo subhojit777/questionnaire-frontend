@@ -5,6 +5,7 @@ import {Cookies, withCookies} from "react-cookie";
 import {instanceOf} from "prop-types";
 import WaitMessage from "./components/WaitMessage";
 import Presenter from "./components/Presenter";
+import {Provider} from "react-redux";
 
 class App extends Component {
   static propTypes = {
@@ -13,6 +14,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+    this.store = props.store;
 
     const {cookies} = props;
 
@@ -51,16 +53,18 @@ class App extends Component {
   render() {
     if (this.state.questions) {
       return (
-        <Router>
-          <Switch>
-            <Route path='/participant' render={(routeProps) => (
-              <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
-            )} />
-            <Route path='/'>
-              <Presenter questions={this.state.questions} />
-            </Route>
-          </Switch>
-        </Router>
+        <Provider store={this.store}>
+          <Router>
+            <Switch>
+              <Route path='/participant' render={(routeProps) => (
+                <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
+              )} />
+              <Route path='/'>
+                <Presenter questions={this.state.questions} />
+              </Route>
+            </Switch>
+          </Router>
+        </Provider>
       );
     }
     else {

@@ -88,6 +88,7 @@ class Presenter extends Component {
     const options = this.state.options.map(option => option.data);
     const answersCountForOptions = [];
 
+    // TODO: Split into presentational and container components.
     this.state.answers.forEach((answers) => {
       answersCountForOptions.push(answers.length);
     });

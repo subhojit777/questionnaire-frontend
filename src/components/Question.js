@@ -76,6 +76,7 @@ class Question extends Component {
   }
 
   render() {
+    // TODO: Split into presentational and container components.
     let options = this.state.options;
     let feedbackMessage = '';
 

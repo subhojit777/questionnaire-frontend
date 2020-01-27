@@ -38,6 +38,7 @@ class Participant extends Component {
   }
 
   render() {
+    // TODO: Split into presentational and container components.
     if (this.state.token) {
       let question = this.state.questions[this.state.questionIndex];
       return (
