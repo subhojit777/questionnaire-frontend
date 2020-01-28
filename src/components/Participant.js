@@ -2,15 +2,15 @@ import React, {Component} from 'react';
 import {parse} from "query-string";
 import {withCookies} from "react-cookie";
 import Question from "../components/Question";
+import {connect} from "react-redux";
 
 class Participant extends Component {
   constructor(props) {
     super(props);
+    this.question = props.questions[props.questionIndex];
 
     this.state = {
       token: props.token,
-      questions: props.questions,
-      questionIndex: props.questionIndex,
     };
   }
 
@@ -40,9 +40,8 @@ class Participant extends Component {
   render() {
     // TODO: Split into presentational and container components.
     if (this.state.token) {
-      let question = this.state.questions[this.state.questionIndex];
       return (
-        <Question question={question} token={this.state.token} />
+        <Question question={this.question} token={this.state.token} />
       );
     }
     else {
@@ -56,4 +55,11 @@ class Participant extends Component {
   }
 }
 
-export default withCookies(Participant);
+// TODO: This is not working.
+const mapStateToProps = (state) => {
+  return {
+    questionIndex: state.questionIndex.index,
+  }
+};
+
+export default withCookies(connect(mapStateToProps)(Participant));
