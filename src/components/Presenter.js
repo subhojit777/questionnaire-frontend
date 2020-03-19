@@ -77,7 +77,7 @@ class Presenter extends Component {
 
   render() {
     const shouldMoveForward = this.state.currentPosition < this.questionsCount;
-    const shouldMoveBackward = this.state.currentPosition >= this.questionsCount;
+    const shouldMoveBackward = this.state.currentPosition > 0;
     const question = this.questions[this.state.currentPosition];
     const options = this.state.options.map(option => option.data);
     const answersCountForOptions = [];
