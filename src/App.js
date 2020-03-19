@@ -26,8 +26,7 @@ class App extends Component {
   }
 
   getQuestionsByPresentation(presentationId) {
-    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/questions-presentation`);
-    url.search = new URLSearchParams({presentation_id: presentationId}).toString();
+    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/questions-presentation/${presentationId}`);
 
     fetch(url.toString(), {
       headers: {

@@ -20,8 +20,7 @@ class Presenter extends Component {
   }
 
   loadOptions(index) {
-    const fetchOptionsByQuestionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question`);
-    fetchOptionsByQuestionUrl.search = new URLSearchParams({question_id: this.questions[index].id}).toString();
+    const fetchOptionsByQuestionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question/${this.questions[index].id}`);
 
     fetch(fetchOptionsByQuestionUrl.toString(), {
       headers: {
@@ -44,13 +43,10 @@ class Presenter extends Component {
   }
 
   async loadAnswers(options) {
-    const fetchAnswersByOptionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers-option`);
     const answers = new Map();
 
     for (let i = 0; i < options.length; i++) {
-      fetchAnswersByOptionUrl.search = new URLSearchParams({
-        option_id: options[i].id,
-      }).toString();
+      const fetchAnswersByOptionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers-option/${options[i].id}`);
 
       const fetchResponse = await fetch(fetchAnswersByOptionUrl.toString(), {
         headers: {
