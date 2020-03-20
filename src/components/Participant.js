@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {parse} from "query-string";
 import {withCookies} from "react-cookie";
 import Question from "../components/Question";
+import Login from "./Login";
 
 class Participant extends Component {
   constructor(props) {
@@ -45,11 +46,8 @@ class Participant extends Component {
       );
     }
     else {
-      let loginURL = `https://github.com/login/oauth/authorize?scope=user:email,read:user&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`;
       return (
-        <div>
-          <a href={loginURL}>Click here to login</a>
-        </div>
+        <Login />
       );
     }
   }
