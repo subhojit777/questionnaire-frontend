@@ -8,7 +8,29 @@ class Login extends Component {
   }
 
   submitHandler(event) {
-    console.log(event.target.name.value);
+    let loginEndpoint = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/login`);
+    let body = {
+      'name': event.target.name.value,
+    };
+
+    fetch(loginEndpoint.toString(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    .then((response) => {
+      if (response.status !== 200) {
+        // TODO: Show error.
+      }
+      else {
+        // TODO: Set the cookie.
+        console.log(response);
+      }
+    })
+    .catch(error => console.log(error));
+
     event.preventDefault();
   }
 
