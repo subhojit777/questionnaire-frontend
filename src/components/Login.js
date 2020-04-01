@@ -1,6 +1,12 @@
 import React, {Component} from "react";
+import {withCookies, Cookies} from "react-cookie";
+import {instanceOf} from "prop-types";
 
 class Login extends Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
   constructor(props) {
     super(props);
 
@@ -21,15 +27,14 @@ class Login extends Component {
       body: JSON.stringify(body),
     })
     .then((response) => {
-      if (response.status !== 200) {
-        // TODO: Show error.
+      if (response.status === 200) {
+        // TODO: Set the name in token cookie and refresh page.
       }
       else {
-        // TODO: Set the cookie.
-        console.log(response);
+        console.error(response);
       }
     })
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
 
     event.preventDefault();
   }
@@ -51,4 +56,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withCookies(Login);
