@@ -27,6 +27,7 @@ class Login extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
+      credentials: "include",
     })
     .then((response) => {
       if (response.status === 200) {

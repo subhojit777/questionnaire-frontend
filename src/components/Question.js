@@ -10,7 +10,6 @@ class Question extends Component {
 
     this.state = {
       question: props.question,
-      token: props.token,
       options: null,
       submittedValue: null,
       hasErrors: false,
@@ -43,9 +42,9 @@ class Question extends Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `token ${this.state.token}`,
       },
       body: JSON.stringify(body),
+      credentials: "include",
     })
     .then((response) => {
       if (response.status === 200) {
