@@ -17,6 +17,7 @@ class App extends Component {
     const {cookies} = props;
 
     // TODO: Unhardcode the default presentation ID.
+    // TODO: Call /is-logged-in endpoint and replace its usage with token.
     this.state = {
       token: cookies.get('token') || null,
       presentationId: cookies.get('pid') || 2,

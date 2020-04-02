@@ -18,10 +18,7 @@ class Question extends Component {
   }
 
   getOptions(questionId) {
-    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question`);
-    url.search = new URLSearchParams({
-      question_id: questionId,
-    }).toString();
+    const url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question/${questionId}`);
 
     fetch(url.toString(), {
       headers: {

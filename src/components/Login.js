@@ -14,10 +14,12 @@ class Login extends Component {
   }
 
   submitHandler(event) {
+    let enteredName = event.target.name.value;
     let loginEndpoint = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/login`);
     let body = {
-      'name': event.target.name.value,
+      'name': enteredName,
     };
+    const {cookies} = this.props;
 
     fetch(loginEndpoint.toString(), {
       method: 'POST',
@@ -28,7 +30,8 @@ class Login extends Component {
     })
     .then((response) => {
       if (response.status === 200) {
-        // TODO: Set the name in token cookie and refresh page.
+        cookies.set('token', enteredName);
+        window.location.reload();
       }
       else {
         console.error(response);
