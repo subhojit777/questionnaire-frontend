@@ -1,6 +1,10 @@
 import React, {Component} from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from 'highcharts';
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+
+// TODO: Fetch from an environment variable.
+const client = new W3CWebSocket('ws://127.0.0.1:8088/ws/');
 
 class Presenter extends Component {
   constructor(props) {
@@ -73,6 +77,11 @@ class Presenter extends Component {
 
   componentDidMount() {
     this.loadOptions(this.state.currentPosition);
+
+    // TODO: Continue.
+    client.onopen = () => {
+      console.log("WebSocket connected.");
+    };
   }
 
   render() {
