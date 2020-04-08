@@ -2,14 +2,20 @@ import React, {Component} from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from 'highcharts';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+import PropTypes from "prop-types";
 
 // TODO: Fetch from an environment variable.
 const client = new W3CWebSocket('ws://127.0.0.1:8088/ws/');
 
 class Presenter extends Component {
+  static propTypes = {
+    presentationId: PropTypes.any.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
+    this.presentationId = props.presentationId;
     this.questions = props.questions;
     this.questionsCount = (this.questions.length - 1);
     this.state = {
@@ -66,11 +72,21 @@ class Presenter extends Component {
   }
 
   moveBackward() {
+    client.send(JSON.stringify({
+      presentationId: this.presentationId,
+      questionIndex: this.state.currentPosition,
+    }));
+
     let newPosition = this.state.currentPosition - 1;
     this.loadOptions(newPosition);
   }
 
   moveForward() {
+    client.send(JSON.stringify({
+      presentationId: this.presentationId,
+      questionIndex: this.state.currentPosition,
+    }));
+
     let newPosition = this.state.currentPosition + 1;
     this.loadOptions(newPosition);
   }
@@ -82,6 +98,10 @@ class Presenter extends Component {
     client.onopen = () => {
       console.log("WebSocket connected.");
     };
+
+    client.onmessage = (message) => {
+      console.log(message);
+    }
   }
 
   render() {

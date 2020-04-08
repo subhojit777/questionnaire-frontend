@@ -17,9 +17,9 @@ class App extends Component {
     const {cookies} = props;
 
     // TODO: Unhardcode the default presentation ID.
+    this.presentationId = cookies.get('pid') || 2;
     this.state = {
       token: cookies.get('token') || null,
-      presentationId: cookies.get('pid') || 2,
       questions: null,
       questionIndex: 0,
     };
@@ -44,7 +44,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.getQuestionsByPresentation(this.state.presentationId);
+    this.getQuestionsByPresentation(this.presentationId);
   }
 
   render() {
@@ -56,7 +56,7 @@ class App extends Component {
               <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
             )} />
             <Route path='/'>
-              <Presenter questions={this.state.questions} />
+              <Presenter questions={this.state.questions} presentationId={this.presentationId} />
             </Route>
           </Switch>
         </Router>
