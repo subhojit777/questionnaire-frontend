@@ -73,8 +73,8 @@ class Presenter extends Component {
 
   moveBackward() {
     client.send(JSON.stringify({
-      presentationId: this.presentationId,
-      questionIndex: this.state.currentPosition,
+      presentation_id: this.presentationId,
+      question_index: this.state.currentPosition,
     }));
 
     let newPosition = this.state.currentPosition - 1;
@@ -83,8 +83,8 @@ class Presenter extends Component {
 
   moveForward() {
     client.send(JSON.stringify({
-      presentationId: this.presentationId,
-      questionIndex: this.state.currentPosition,
+      presentation_id: this.presentationId,
+      question_index: this.state.currentPosition,
     }));
 
     let newPosition = this.state.currentPosition + 1;
