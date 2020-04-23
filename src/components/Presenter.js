@@ -72,35 +72,31 @@ class Presenter extends Component {
   }
 
   moveBackward() {
+    // TODO: Send the movement direction as well.
     client.send(JSON.stringify({
       presentation_id: this.presentationId,
       question_index: this.state.currentPosition,
     }));
-
-    let newPosition = this.state.currentPosition - 1;
-    this.loadOptions(newPosition);
   }
 
   moveForward() {
+    // TODO: Send the movement direction as well.
     client.send(JSON.stringify({
       presentation_id: this.presentationId,
       question_index: this.state.currentPosition,
     }));
-
-    let newPosition = this.state.currentPosition + 1;
-    this.loadOptions(newPosition);
   }
 
   componentDidMount() {
     this.loadOptions(this.state.currentPosition);
 
-    // TODO: Continue.
     client.onopen = () => {
       console.log("WebSocket connected.");
     };
 
     client.onmessage = (message) => {
-      console.log(message);
+      let data = JSON.parse(message.data);
+      this.loadOptions(data.new_question_index);
     }
   }
 
