@@ -4,8 +4,7 @@ import Highcharts from 'highcharts';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import PropTypes from "prop-types";
 
-// TODO: Fetch from an environment variable.
-const client = new W3CWebSocket('ws://127.0.0.1:8088/ws/');
+const client = new W3CWebSocket(`${process.env.REACT_APP_WEB_SOCKET_URL}/ws/`);
 
 class Presenter extends Component {
   static propTypes = {
