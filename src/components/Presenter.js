@@ -1,19 +1,19 @@
 import React, {Component} from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from 'highcharts';
-import { w3cwebsocket as W3CWebSocket } from "websocket";
 import PropTypes from "prop-types";
-
-const client = new W3CWebSocket(`${process.env.REACT_APP_WEB_SOCKET_URL}/ws/`);
+import {w3cwebsocket as W3CWebSocket} from "websocket";
 
 class Presenter extends Component {
   static propTypes = {
     presentationId: PropTypes.any.isRequired,
+    webSocketClient: PropTypes.exact(W3CWebSocket).isRequired,
   };
 
   constructor(props) {
     super(props);
 
+    this.client = props.webSocketClient;
     this.presentationId = props.presentationId;
     this.questions = props.questions;
     this.questionsCount = (this.questions.length - 1);
@@ -71,7 +71,7 @@ class Presenter extends Component {
   }
 
   moveBackward() {
-    client.send(JSON.stringify({
+    this.client.send(JSON.stringify({
       presentation_id: this.presentationId,
       question_index: this.state.currentPosition,
       direction: "Backward",
@@ -79,7 +79,7 @@ class Presenter extends Component {
   }
 
   moveForward() {
-    client.send(JSON.stringify({
+    this.client.send(JSON.stringify({
       presentation_id: this.presentationId,
       question_index: this.state.currentPosition,
       direction: "Forward",
@@ -89,11 +89,7 @@ class Presenter extends Component {
   componentDidMount() {
     this.loadOptions(this.state.currentPosition);
 
-    client.onopen = () => {
-      console.log("WebSocket connected.");
-    };
-
-    client.onmessage = (message) => {
+    this.client.onmessage = (message) => {
       let data = JSON.parse(message.data);
       this.loadOptions(data.new_question_index);
     }

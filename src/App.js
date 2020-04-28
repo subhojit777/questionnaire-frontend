@@ -5,6 +5,9 @@ import {Cookies, withCookies} from "react-cookie";
 import {instanceOf} from "prop-types";
 import WaitMessage from "./components/WaitMessage";
 import Presenter from "./components/Presenter";
+import {w3cwebsocket as W3CWebSocket} from "websocket";
+
+const client = new W3CWebSocket(`${process.env.REACT_APP_WEB_SOCKET_URL}/ws/`);
 
 class App extends Component {
   static propTypes = {
@@ -53,10 +56,10 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path='/participant' render={(routeProps) => (
-              <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
+              <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} webSocketClient={client} />
             )} />
             <Route path='/'>
-              <Presenter questions={this.state.questions} presentationId={this.presentationId} />
+              <Presenter questions={this.state.questions} presentationId={this.presentationId} webSocketClient={client} />
             </Route>
           </Switch>
         </Router>
