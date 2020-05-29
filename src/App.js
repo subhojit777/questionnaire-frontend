@@ -47,6 +47,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    client.onopen = () => console.log("websocket client connected.");
     this.getQuestionsByPresentation(this.presentationId);
   }
 
