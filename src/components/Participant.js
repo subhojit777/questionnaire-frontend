@@ -27,18 +27,16 @@ class Participant extends Component {
     };
   }
 
-  getOptions(questionId) {
+  async getOptions(questionId) {
     const url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question/${questionId}`);
 
-    fetch(url.toString(), {
+    return await fetch(url.toString(), {
       headers: {
         'Accept': 'application/json',
       }
     })
     .then(response => response.json())
-    .then(data => {
-      return data;
-    });
+    .then(data => data);
   }
 
   handleSubmission(value) {
@@ -76,16 +74,17 @@ class Participant extends Component {
     });
   }
 
-  componentDidMount() {
-    let options = this.getOptions(this.questions[this.state.questionIndex].id);
+  async componentDidMount() {
+    let options = await this.getOptions(this.questions[this.state.questionIndex].id);
     this.setState({
       options: options,
     });
 
-    this.client.onmessage = (message) => {
+    this.client.onmessage = async message => {
       let data = JSON.parse(message.data);
-      let options = this.getOptions(this.questions[this.state.questionIndex].id);
+      let options = await this.getOptions(this.questions[this.state.questionIndex].id);
 
+      // TODO: Update state after all options are fetched.
       this.setState({
         questionIndex: data.new_question_index,
         submittedValue: null,
