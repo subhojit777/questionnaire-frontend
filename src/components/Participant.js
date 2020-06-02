@@ -25,6 +25,19 @@ class Participant extends Component {
       hasErrors: false,
       options: [],
     };
+
+    this.client.onmessage = message => {
+      let data = JSON.parse(message.data);
+
+      this.getOptions(this.questions[data.new_question_index].id).then(options => {
+        this.setState({
+          questionIndex: data.new_question_index,
+          submittedValue: null,
+          hasErrors: false,
+          options: options,
+        });
+      });
+    };
   }
 
   async getOptions(questionId) {
@@ -74,24 +87,12 @@ class Participant extends Component {
     });
   }
 
-  async componentDidMount() {
-    let options = await this.getOptions(this.questions[this.state.questionIndex].id);
-    this.setState({
-      options: options,
-    });
-
-    this.client.onmessage = async message => {
-      let data = JSON.parse(message.data);
-      let options = await this.getOptions(this.questions[this.state.questionIndex].id);
-
-      // TODO: Update state after all options are fetched.
+  componentDidMount() {
+    this.getOptions(this.questions[this.state.questionIndex].id).then(options => {
       this.setState({
-        questionIndex: data.new_question_index,
-        submittedValue: null,
-        hasErrors: false,
         options: options,
       });
-    };
+    });
   }
 
   render() {
