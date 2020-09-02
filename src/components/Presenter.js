@@ -72,17 +72,23 @@ class Presenter extends Component {
 
   moveBackward() {
     this.client.send(JSON.stringify({
-      presentation_id: this.presentationId,
-      question_index: this.state.currentPosition,
-      direction: "Backward",
+      data: JSON.stringify({
+        presentation_id: this.presentationId,
+        question_index: this.state.currentPosition,
+        direction: "Backward",
+      }),
+      event: "Navigate",
     }));
   }
 
   moveForward() {
     this.client.send(JSON.stringify({
-      presentation_id: this.presentationId,
-      question_index: this.state.currentPosition,
-      direction: "Forward",
+      data: JSON.stringify({
+        presentation_id: this.presentationId,
+        question_index: this.state.currentPosition,
+        direction: "Forward",
+      }),
+      event: "Navigate",
     }));
   }
 
