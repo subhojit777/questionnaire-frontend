@@ -22,6 +22,7 @@ class Presenter extends Component {
       options: [],
       answers: new Map(),
     };
+    this.navigateEvent = "Navigate";
 
     this.loadOptions = this.loadOptions.bind(this);
     this.moveBackward = this.moveBackward.bind(this);
@@ -77,7 +78,7 @@ class Presenter extends Component {
         question_index: this.state.currentPosition,
         direction: "Backward",
       }),
-      event: "Navigate",
+      event: this.navigateEvent,
     }));
   }
 
@@ -88,7 +89,7 @@ class Presenter extends Component {
         question_index: this.state.currentPosition,
         direction: "Forward",
       }),
-      event: "Navigate",
+      event: this.navigateEvent,
     }));
   }
 
@@ -97,7 +98,11 @@ class Presenter extends Component {
 
     this.client.onmessage = (message) => {
       let data = JSON.parse(message.data);
-      this.loadOptions(data.new_question_index);
+
+      switch (data.event) {
+        case this.navigateEvent:
+          this.loadOptions(data.new_question_index);
+      }
     }
   }
 
