@@ -102,6 +102,10 @@ class Presenter extends Component {
       switch (response.event) {
         case this.navigateEvent:
           this.loadOptions(response.data.new_question_index);
+          break;
+
+        default:
+          console.error("Event not supported.");
       }
     }
   }
