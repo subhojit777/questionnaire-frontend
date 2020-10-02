@@ -97,11 +97,11 @@ class Presenter extends Component {
     this.loadOptions(this.state.currentPosition);
 
     this.client.onmessage = (message) => {
-      let data = JSON.parse(message.data);
+      let response = JSON.parse(message.data);
 
-      switch (data.event) {
+      switch (response.event) {
         case this.navigateEvent:
-          this.loadOptions(data.new_question_index);
+          this.loadOptions(response.data.new_question_index);
       }
     }
   }

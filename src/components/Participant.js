@@ -27,11 +27,11 @@ class Participant extends Component {
     };
 
     this.client.onmessage = message => {
-      let data = JSON.parse(message.data);
+      let response = JSON.parse(message.data);
 
-      this.getOptions(this.questions[data.new_question_index].id).then(options => {
+      this.getOptions(this.questions[response.data.new_question_index].id).then(options => {
         this.setState({
-          questionIndex: data.new_question_index,
+          questionIndex: response.data.new_question_index,
           submittedValue: null,
           hasErrors: false,
           options: options,
