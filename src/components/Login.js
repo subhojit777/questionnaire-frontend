@@ -25,18 +25,20 @@ class Login extends Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: JSON.stringify(body),
       credentials: "include",
     })
     .then((response) => {
-      if (response.status === 200) {
-        cookies.set('token', enteredName);
-        window.location.reload();
-      }
-      else {
+      if (response.status !== 200) {
         console.error(response);
       }
+      return response.json();
+    })
+    .then(data => {
+      cookies.set('token', data.id);
+      window.location.reload();
     })
     .catch(error => console.error(error));
 
