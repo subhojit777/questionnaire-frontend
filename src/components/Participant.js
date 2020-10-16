@@ -19,6 +19,8 @@ class Participant extends Component {
     this.client = props.webSocketClient;
     this.authenticationToken = props.token;
     this.questions = props.questions;
+    this.answersCreateEvent = "AnswersCreate";
+    this.navigateEvent = "Navigate";
     this.state = {
       questionIndex: props.questionIndex,
       submittedValue: null,
@@ -29,14 +31,21 @@ class Participant extends Component {
     this.client.onmessage = message => {
       let response = JSON.parse(message.data);
 
-      this.getOptions(this.questions[response.data.new_question_index].id).then(options => {
-        this.setState({
-          questionIndex: response.data.new_question_index,
-          submittedValue: null,
-          hasErrors: false,
-          options: options,
+      switch (response.event) {
+        case this.navigateEvent:
+          this.getOptions(this.questions[response.data.new_question_index].id).then(options => {
+          this.setState({
+            questionIndex: response.data.new_question_index,
+            submittedValue: null,
+            hasErrors: false,
+            options: options,
+          });
         });
-      });
+        break;
+
+        default:
+          console.error("Event not supported.");
+      }
     };
   }
 
@@ -71,6 +80,14 @@ class Participant extends Component {
         this.setState({
           submittedValue: value,
         });
+
+        this.client.send(JSON.stringify({
+          data: JSON.stringify({
+            option_id: value,
+            user_id: parseInt(this.authenticationToken),
+          }),
+          event: this.answersCreateEvent,
+        }));
       }
       else {
         this.setState({
