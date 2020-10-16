@@ -23,6 +23,7 @@ class Presenter extends Component {
       answers: new Map(),
     };
     this.navigateEvent = "Navigate";
+    this.answersCreateEvent = "AnswersCreate";
 
     this.loadOptions = this.loadOptions.bind(this);
     this.moveBackward = this.moveBackward.bind(this);
@@ -102,6 +103,10 @@ class Presenter extends Component {
       switch (response.event) {
         case this.navigateEvent:
           this.loadOptions(response.data.new_question_index);
+          break;
+
+        case this.answersCreateEvent:
+          this.loadOptions(this.state.currentPosition);
           break;
 
         default:
