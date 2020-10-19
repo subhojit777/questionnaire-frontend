@@ -1,11 +1,20 @@
 import React, {Component} from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from 'highcharts';
+import PropTypes from "prop-types";
+import {w3cwebsocket as W3CWebSocket} from "websocket";
 
 class Presenter extends Component {
+  static propTypes = {
+    presentationId: PropTypes.any.isRequired,
+    webSocketClient: PropTypes.exact(W3CWebSocket).isRequired,
+  };
+
   constructor(props) {
     super(props);
 
+    this.client = props.webSocketClient;
+    this.presentationId = props.presentationId;
     this.questions = props.questions;
     this.questionsCount = (this.questions.length - 1);
     this.state = {
@@ -13,6 +22,8 @@ class Presenter extends Component {
       options: [],
       answers: new Map(),
     };
+    this.navigateEvent = "Navigate";
+    this.answersCreateEvent = "AnswersCreate";
 
     this.loadOptions = this.loadOptions.bind(this);
     this.moveBackward = this.moveBackward.bind(this);
@@ -20,8 +31,7 @@ class Presenter extends Component {
   }
 
   loadOptions(index) {
-    const fetchOptionsByQuestionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question`);
-    fetchOptionsByQuestionUrl.search = new URLSearchParams({question_id: this.questions[index].id}).toString();
+    const fetchOptionsByQuestionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/options-question/${this.questions[index].id}`);
 
     fetch(fetchOptionsByQuestionUrl.toString(), {
       headers: {
@@ -44,13 +54,10 @@ class Presenter extends Component {
   }
 
   async loadAnswers(options) {
-    const fetchAnswersByOptionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers-option`);
     const answers = new Map();
 
     for (let i = 0; i < options.length; i++) {
-      fetchAnswersByOptionUrl.search = new URLSearchParams({
-        option_id: options[i].id,
-      }).toString();
+      const fetchAnswersByOptionUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers-option/${options[i].id}`);
 
       const fetchResponse = await fetch(fetchAnswersByOptionUrl.toString(), {
         headers: {
@@ -66,22 +73,51 @@ class Presenter extends Component {
   }
 
   moveBackward() {
-    let newPosition = this.state.currentPosition - 1;
-    this.loadOptions(newPosition);
+    this.client.send(JSON.stringify({
+      data: JSON.stringify({
+        presentation_id: this.presentationId,
+        question_index: this.state.currentPosition,
+        direction: "Backward",
+      }),
+      event: this.navigateEvent,
+    }));
   }
 
   moveForward() {
-    let newPosition = this.state.currentPosition + 1;
-    this.loadOptions(newPosition);
+    this.client.send(JSON.stringify({
+      data: JSON.stringify({
+        presentation_id: this.presentationId,
+        question_index: this.state.currentPosition,
+        direction: "Forward",
+      }),
+      event: this.navigateEvent,
+    }));
   }
 
   componentDidMount() {
     this.loadOptions(this.state.currentPosition);
+
+    this.client.onmessage = (message) => {
+      let response = JSON.parse(message.data);
+
+      switch (response.event) {
+        case this.navigateEvent:
+          this.loadOptions(response.data.new_question_index);
+          break;
+
+        case this.answersCreateEvent:
+          this.loadOptions(this.state.currentPosition);
+          break;
+
+        default:
+          console.error("Event not supported.");
+      }
+    }
   }
 
   render() {
     const shouldMoveForward = this.state.currentPosition < this.questionsCount;
-    const shouldMoveBackward = this.state.currentPosition >= this.questionsCount;
+    const shouldMoveBackward = this.state.currentPosition > 0;
     const question = this.questions[this.state.currentPosition];
     const options = this.state.options.map(option => option.data);
     const answersCountForOptions = [];

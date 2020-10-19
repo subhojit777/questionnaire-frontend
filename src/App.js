@@ -5,6 +5,9 @@ import {Cookies, withCookies} from "react-cookie";
 import {instanceOf} from "prop-types";
 import WaitMessage from "./components/WaitMessage";
 import Presenter from "./components/Presenter";
+import {w3cwebsocket as W3CWebSocket} from "websocket";
+
+const client = new W3CWebSocket(`${process.env.REACT_APP_WEB_SOCKET_URL}/ws/`);
 
 class App extends Component {
   static propTypes = {
@@ -17,17 +20,16 @@ class App extends Component {
     const {cookies} = props;
 
     // TODO: Unhardcode the default presentation ID.
+    this.presentationId = cookies.get('pid') || 2;
     this.state = {
       token: cookies.get('token') || null,
-      presentationId: cookies.get('pid') || 2,
       questions: null,
       questionIndex: 0,
     };
   }
 
   getQuestionsByPresentation(presentationId) {
-    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/questions-presentation`);
-    url.search = new URLSearchParams({presentation_id: presentationId}).toString();
+    let url = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/questions-presentation/${presentationId}`);
 
     fetch(url.toString(), {
       headers: {
@@ -45,7 +47,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.getQuestionsByPresentation(this.state.presentationId);
+    client.onopen = () => console.log("websocket client connected.");
+    this.getQuestionsByPresentation(this.presentationId);
   }
 
   render() {
@@ -54,10 +57,10 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path='/participant' render={(routeProps) => (
-              <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} />
+              <Participant {...routeProps} token={this.state.token} questions={this.state.questions} questionIndex={this.state.questionIndex} webSocketClient={client} />
             )} />
             <Route path='/'>
-              <Presenter questions={this.state.questions} />
+              <Presenter questions={this.state.questions} presentationId={this.presentationId} webSocketClient={client} />
             </Route>
           </Switch>
         </Router>

@@ -12,7 +12,8 @@
     "react-dom": "^16.8.6",
     "react-radio-group": "^3.0.3",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "websocket": "^1.0.31"
   },
   "scripts": {
     "start": "react-scripts start",
