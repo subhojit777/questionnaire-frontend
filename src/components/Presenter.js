@@ -144,13 +144,21 @@ class Presenter extends Component {
 
     return (
       <div>
-        <h2>{question.title}</h2>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={graphConfig}
-        />
-        <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveBackward} onClick={this.moveBackward}>Backward</button>
-        <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveForward} onClick={this.moveForward}>Forward</button>
+        <div className="col-12">
+          <h2>{question.title}</h2>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={graphConfig}
+          />
+        </div>
+        <div className="col-12">
+          <span className="col-6 text-center" style={{display: 'inline-block'}}>
+            <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveBackward} onClick={this.moveBackward}>Backward</button>
+          </span>
+          <span className="col-6 text-center" style={{display: 'inline-block'}}>
+            <button type="button" className="btn btn-outline-primary" disabled={!shouldMoveForward} onClick={this.moveForward}>Forward</button>
+          </span>
+        </div>
       </div>
     )
   }
