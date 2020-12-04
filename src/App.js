@@ -6,6 +6,7 @@ import {instanceOf} from "prop-types";
 import WaitMessage from "./components/WaitMessage";
 import Presenter from "./components/Presenter";
 import {w3cwebsocket as W3CWebSocket} from "websocket";
+import queryString from "query-string";
 
 const client = new W3CWebSocket(`${process.env.REACT_APP_WEB_SOCKET_URL}/ws/`);
 
@@ -19,8 +20,9 @@ class App extends Component {
 
     const {cookies} = props;
 
-    // TODO: Unhardcode the default presentation ID.
-    this.presentationId = cookies.get('pid') || 2;
+    const parsedQueryString = queryString.parse(window.location.search);
+
+    this.presentationId = parseInt(parsedQueryString.pid) || 1;
     this.state = {
       token: cookies.get('token') || null,
       questions: null,
