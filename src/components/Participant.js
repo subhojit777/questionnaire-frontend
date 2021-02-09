@@ -62,45 +62,17 @@ class Participant extends Component {
   }
 
   handleSubmission(value) {
-    let answerPostUrl = new URL(`${process.env.REACT_APP_BACK_END_BASE_URL}/answers`);
-    let body = {
-      'option_id': value,
-    };
+    this.client.send(JSON.stringify({
+      data: JSON.stringify({
+        option_id: value,
+        user_id: parseInt(this.authenticationToken),
+      }),
+      event: this.answersCreateEvent,
+    }));
 
-    fetch(answerPostUrl.toString(), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-      credentials: "include",
-    })
-    .then((response) => {
-      if (response.status === 200) {
-        this.setState({
-          submittedValue: value,
-        });
-
-        this.client.send(JSON.stringify({
-          data: JSON.stringify({
-            option_id: value,
-            user_id: parseInt(this.authenticationToken),
-          }),
-          event: this.answersCreateEvent,
-        }));
-      }
-      else {
-        this.setState({
-          hasErrors: true,
-        });
-        console.error(response);
-      }
-    })
-    .catch(error => {
-      this.setState({
-        hasErrors: true,
-      });
-      console.error(error);
+    // TODO: This should be done based on success of submission.
+    this.setState({
+      submittedValue: value,
     });
   }
 
